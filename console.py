@@ -141,12 +141,8 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     param_dict[key] = int(value)
             except ValueError:
+                # Skip parameters that don't fit the requirements
                 pass
-
-        # Ensure 'updated_at' is present or set it to the current time
-        if 'updated_at' not in param_dict:
-            param_dict['updated_at'] = datetime.now().strftime(
-                    '%Y-%m-%dT%H:%M:%S.%f')
 
         new_instance = HBNBCommand.classes[class_name](**param_dict)
         storage.save()
