@@ -10,7 +10,7 @@ GRANT ALL PRIVILEGES ON hbnb_test_db.*
 TO 'hbnb_test'@'localhost'
 
 -- Grant SELECT privilege on the performance_schema database
-GRANT SELECT ON performance_schema.* TO 'hbnb_test'@'localhost';
+GRANT SELECT ON performance_schema.* TO 'hbnb_test'@'localhost'
  IDENTIFIED BY 'hbnb_test_pwd';
 
 -- Flush privileges to apply changes
