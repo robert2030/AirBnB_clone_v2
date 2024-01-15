@@ -11,6 +11,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from datetime import datetime
 
 
 class HBNBCommand(cmd.Cmd):
@@ -116,6 +117,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+
         if not args:
             print("** class name missing **")
             return
@@ -140,6 +142,11 @@ class HBNBCommand(cmd.Cmd):
                     param_dict[key] = int(value)
             except ValueError:
                 pass
+
+        # Ensure 'updated_at' is present or set it to the current time
+        if 'updated_at' not in param_dict:
+            param_dict['updated_at'] = datetime.now().strftime(
+                    '%Y-%m-%dT%H:%M:%S.%f')
 
         new_instance = HBNBCommand.classes[class_name](**param_dict)
         storage.save()
