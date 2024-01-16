@@ -144,6 +144,11 @@ class HBNBCommand(cmd.Cmd):
                 # Skip parameters that don't fit the requirements
                 pass
 
+        # Ensure 'updated_at' is present or set it to the current time
+       # if 'updated_at' not in param_dict:
+           # param_dict['updated_at'] = datetime.now().strftime(
+                   # '%Y-%m-%dT%H:%M:%S.%f')
+
         new_instance = HBNBCommand.classes[class_name](**param_dict)
         storage.save()
         print(new_instance.id)
@@ -333,8 +338,8 @@ class HBNBCommand(cmd.Cmd):
                 if att_name in HBNBCommand.types:
                     att_val = HBNBCommand.types[att_name](att_val)
 
-                # update dictionary with name, value pair
-                new_dict.__dict__.update({att_name: att_val})
+                # update object with name, value pair
+                setattr(new_dict, att_name, att_val)
 
         new_dict.save()  # save updates to file
 
