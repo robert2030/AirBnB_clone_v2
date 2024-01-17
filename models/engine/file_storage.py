@@ -15,24 +15,24 @@ class FileStorage:
         return self.__objects
 
     def new(self, obj):
-        """Adds new object to storage dictionary"""
+        """Adds a new object to the storage dictionary"""
         key = f"{obj.__class__.__name__}.{obj.id}"
         self.__objects[key] = obj
 
     def delete(self, obj=None):
         """Deletes obj from __objects if it exists"""
-        if obj is not None:
+        if obj:
             key = f"{obj.__class__.__name__}.{obj.id}"
             self.__objects.pop(key, None)
 
     def save(self):
-        """Saves storage dictionary to file"""
+        """Saves the storage dictionary to file"""
         with open(FileStorage.__file_path, 'w') as f:
             temp = {key: obj.to_dict() for key, obj in self.__objects.items()}
             json.dump(temp, f)
 
     def reload(self):
-        """Loads storage dictionary from file"""
+        """Loads the storage dictionary from file"""
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place

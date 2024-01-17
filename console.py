@@ -234,11 +234,29 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        # Use the storage.all() method based on the storage type
+        if storage.__class__.__name__ == "FileStorage":
+            objects_dict = storage.all()
+        elif storage.__class__.__name__ == "DBStorage":
+            objects_dict = storage.all(args)
         else:
-            for k, v in storage._FileStorage__objects.items():
+            print("** Unknown storage type **")
+            return
+
+        for k, v in objects_dict.items():
+            if k.split('.')[0] == args:
+                print_list.append(str(v))
+        else:
+            # Use the storage.all() method based on the storage type
+            if storage.__class__.__name__ == "FileStorage":
+                objects_dict = storage.all()
+            elif storage.__class__.__name__ == "DBStorage":
+                objects_dict = storage.all()
+            else:
+                print("** Unknown storage type **")
+                return
+
+            for k, v in objects_dict.items():
                 print_list.append(str(v))
 
         print(print_list)

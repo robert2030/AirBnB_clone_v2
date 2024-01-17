@@ -7,8 +7,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
 from models.user import User
 from models.state import State
-from models.city import City
 from models.place import Place
+from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
@@ -34,7 +34,7 @@ class DBStorage:
         """Queries all objects depending on the class name"""
         obj_dict = {}
         if cls:
-            objects = self.__sessions.query(cls).all()
+            objects = self.__session.query(cls).all()
         else:
             classes = [User, State, City, Amenity, Place, Review]
             objects = []
