@@ -127,6 +127,10 @@ class HBNBCommand(cmd.Cmd):
         class_name = args_list[0]
         params = args_list[1:]
 
+        if ' ' in class_name:
+            print("** class name cannot contain spaces **")
+            ruturn
+
         # Parse the parameters to create a dictionary
         param_dict = {}
         for param in params:
