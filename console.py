@@ -296,7 +296,7 @@ class HBNBCommand(cmd.Cmd):
         # isolate id from args
         args = args[2].partition(" ")
         if args[0]:
-            c_id = args[0]
+            id = args[0]
         else:  # id not present
             print("** instance id missing **")
             return
@@ -312,53 +312,36 @@ class HBNBCommand(cmd.Cmd):
         # first determine if kwargs or args
         if '{' in args[2] and '}' in args[2] and type(eval(args[2])) is dict:
             kwargs = eval(args[2])
-            args = []  # reformat kwargs into list, ex: [<name>, <value>, ...]
             for k, v in kwargs.items():
-                args.append(k)
-                args.append(v)
-        else:  # isolate args
-            args = args[2]
-            if args and args[0] == '\"':  # check for quoted arg
-                second_quote = args.find('\"', 1)
-                att_name = args[1:second_quote]
-                args = args[second_quote + 1:]
+                cmd = "{} {} {} {}".format(c_name, c_id, k, v)
+                self.do_update(cmd)
+            return
 
-            args = args.partition(' ')
+        # isolate args
+        args = args[2].split(' ')
 
-            # if att_name was not quoted arg
-            if not att_name and args[0] != ' ':
-                att_name = args[0]
-            # check for quoted val arg
-            if args[2] and args[2][0] == '\"':
-                att_val = args[2][1:args[2].find('\"', 1)]
+        # if no attribute name
+        if not args[0]:
+            print("** attribute name missing **")
+            return
 
-            # if att_val was not quoted arg
-            if not att_val and args[2]:
-                att_val = args[2].partition(' ')[0]
+        # if no attribute value
+        if len(args) < 2:
+            print("** value missing **")
+            return
 
-            args = [att_name, att_val]
+        att_name = args[0]
+        att_val = args[1]
+
+        # check for type casting
+        if att_name in HBNBCommand.types:
+            att_val = HBNBCommand.types[att_name](att_val)
 
         # retrieve dictionary of current objects
         new_dict = storage.all()[key]
 
-        # iterate through attr names and values
-        for i, att_name in enumerate(args):
-            # block only runs on even iterations
-            if (i % 2 == 0):
-                att_val = args[i + 1]  # following item is value
-                if not att_name:  # check for att_name
-                    print("** attribute name missing **")
-                    return
-                if not att_val:  # check for att_value
-                    print("** value missing **")
-                    return
-                # type cast as necessary
-                if att_name in HBNBCommand.types:
-                    att_val = HBNBCommand.types[att_name](att_val)
-
-                # update object with name, value pair
-                setattr(new_dict, att_name, att_val)
-
+        # update object with name, value pair
+        setattr(new_dict, att_name, att_val)
         new_dict.save()  # save updates to file
 
     def help_update(self):
