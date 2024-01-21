@@ -1,3 +1,4 @@
+# models/user.py
 #!/usr/bin/python3
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
@@ -14,7 +15,8 @@ class User(BaseModel, Base):
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
 
-    places = relationship('Place', backref='user', cascade='all, delete-orphan',
-            foreign_keys='Place.user_id')
-    reviews = relationship('Review', backref='user', cascade='all, delete-orphan')
+    places = relationship('Place', backref='user', 
+            cascade='all, delete-orphan', foreign_keys='Place.user_id')
+    reviews = relationship('Review', backref='user', 
+            cascade='all, delete-orphan')
 
