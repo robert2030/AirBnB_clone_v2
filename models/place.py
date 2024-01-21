@@ -1,18 +1,17 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from os import getenv
 
-place_amenity = Table('place_amenity',Base.metadata,
-        Column('place_id', String(60), 
-            ForeignKey('places.id'),primary_key=True, nullable=False),
-        Column('amenity_id', String(60), 
-            ForeignKey('amenities.id'), primary_key=True, nullable=False))
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'), primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'), primary_key=True, nullable=False))
 
 class Place(BaseModel, Base):
-    """ The Place class, contains city ID, user ID, name, and description """
+    """The Place class, contains city ID, user ID, name, and description"""
     __tablename__ = "places"
 
     if getenv('HBNB_TYPE_STORAGE') == 'db':
@@ -30,7 +29,7 @@ class Place(BaseModel, Base):
         # For DBStorage
         user = relationship('User', backref='places', cascade='all, delete-orphan', passive_deletes=True)
         reviews = relationship('Review', backref='place', cascade='all, delete-orphan')
-        amenities = relationship('Amenity', secondary='place_amenity', viewonly=False)
+        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
 
     # For FileStorage
     @property
@@ -51,7 +50,7 @@ class Place(BaseModel, Base):
         from models import storage
         amenity_list = []
         for amenity_id in self.amenity_ids:
-            amenity = storage.get('Amenity',amenity_id)
+            amenity = storage.get('Amenity', amenity_id)
             if amenity:
                 amenity_list.append(amenity)
         return amenity_list
