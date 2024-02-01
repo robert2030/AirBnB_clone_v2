@@ -5,6 +5,9 @@ from datetime import datetime
 from fabric.contrib.files import exists
 
 
+hosts_list = ['user@host1', 'ubuntu@100.24.255.166']
+
+@hosts(hosts_list)
 def do_pack():
     """ Generates a .tgz archive from the contents of the web_static folder.
     Returns:
