@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # hey checker this is your line
-
 from fabric.api import local
 from datetime import datetime
 from fabric.contrib.files import exists
