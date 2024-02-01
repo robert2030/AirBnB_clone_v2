@@ -28,6 +28,7 @@ server {
 
     location /hbnb_static/ {
         alias /data/web_static/current/;
+    }
 
     location /redirect_me {
         return 301 https://bentechnews.blogspot.com;
