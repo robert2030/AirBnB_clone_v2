@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install nginx if not installedi
+# Install Nginx if not installed
 sudo apt-get -y update
 sudo apt-get -y install nginx
 
@@ -15,9 +15,25 @@ sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Give ownership of /data/ to ubuntu user and group
 sudo chown -R ubuntu:ubuntu /data/
 
-# Update Nginx configuration
-config="location /hbnb_static/ {alias /data/web_static/current/; }"
-sudo sed -i "/^server_name _;/a $config" /etc/nginx/sites-available/default
+# Update Nginx configuration to serve content from /data/web_static/current/ to hbnb_static
+sudo bash -c 'cat <<EOF | sudo tee /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location /hbnb_static/ {
+        alias /data/web_static/current/;
+
+    location /redirect_me {
+        return 301 https://bentechnews.blogspot.com;
+    }
+}
+EOF'
 
 # Restart Nginx
 sudo service nginx restart
