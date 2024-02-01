@@ -3,9 +3,8 @@
 from fabric.api import local
 from datetime import datetime
 from fabric.contrib.files import exists
-
-
 hosts_list = ['user@host1', 'ubuntu@100.24.255.166']
+
 
 @hosts(hosts_list)
 def do_pack():
