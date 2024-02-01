@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """script that generates a .tgz """
-from fabric.api import local
+from fabric.api import local, hosts
 from datetime import datetime
 from fabric.contrib.files import exists
-hosts_list = ['user@host1', 'ubuntu@100.24.255.166']
+hosts_list = ['ubuntu@34.207.190.235', 'ubuntu@100.24.255.166']
 
 
 @hosts(hosts_list)
