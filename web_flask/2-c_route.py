@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """script that starts a Flask web application"""
 
-from flask import Flask, escape
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -17,9 +17,10 @@ def hbnb():
 
 
 @app.route('/c/<test>', strict_slashes=False)
-def c_text(text):
-    return 'C {}'.format(escape(text.replace('_', ' ')))
+def c(text):
+    text = text.replace("_", " ")
+    return 'C {}'.format(text)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0')
