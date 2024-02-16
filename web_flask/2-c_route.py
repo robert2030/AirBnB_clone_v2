@@ -16,7 +16,7 @@ def hbnb():
     return 'HBNB'
 
 
-@app.route('/c/<test>,', strict_slashes=False)
+@app.route('/c/<test>', strict_slashes=False)
 def c_text(text):
     return 'C {}'.format(escape(text.replace('_', ' ')))
 
