@@ -1,41 +1,38 @@
 #!/usr/bin/env bash
-# Install Nginx if not installed
-sudo apt-get -y update
-sudo apt-get -y install nginx
+# Sets up a web server for deployment of web_static.
 
-# Create necessary directories if they don't exist
-sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared/
+apt-get update
+apt-get install -y nginx
 
-# Create a fake HTML file for testing
-echo "Hello, this is a test index page." | sudo tee /data/web_static/releases/test/index.html
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Create symbolic link if it doesn't exist, delete and recreate otherwise
-sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 
-# Give ownership of /data/ to ubuntu user and group
-sudo chown -R ubuntu:ubuntu /data/
-
-# Update Nginx configuration to serve content from /data/web_static/current/ to hbnb_static
-sudo bash -c 'cat <<EOF | sudo tee /etc/nginx/sites-available/default
-server {
+printf %s "server {
     listen 80 default_server;
     listen [::]:80 default_server;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
+    index  index.html index.htm;
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-
-    server_name _;
-
-    location /hbnb_static/ {
-        alias /data/web_static/current/;
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
     }
 
     location /redirect_me {
-        return 301 https://bentechnews.blogspot.com;
+        return 301 http://cuberule.com/;
     }
-}
-EOF'
 
-# Restart Nginx
-sudo service nginx restart
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
 
+service nginx restart

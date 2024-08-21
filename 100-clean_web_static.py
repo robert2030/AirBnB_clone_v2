@@ -1,41 +1,30 @@
 #!/usr/bin/python3
-"""
-100-clean_web_static.py
-This module contains a Fabric script that deletes
-out-of-date archives, using the function do_clean
-"""
-
-from fabric.api import *
-import datetime
+# Fabfile to delete out-of-date archives.
 import os
+from fabric.api import *
 
-env.hosts = ['54.160.124.170', '52.205.97.123']
-env.user = "ubuntu"
-env.key_filename = "/alx-system_engineering-devops/\
-0x04-loops_conditions_and_parsing/0-RSA_public_key"
+env.hosts = ["104.196.168.90", "35.196.46.172"]
 
 
 def do_clean(number=0):
-    """
-    deletes out-of-date archives
-    """
-    files_ver = local("ls -t ./versions", capture=True).split("\n")
-    files_rel = run("ls -t /data/web_static/releases/").split("\n")
-    number = int(number)
+    """Delete out-of-date archives.
 
-    if files_ver:
-        if number == 0 or number == 1:
-            for i in range(1, len(files_ver)):
-                local("rm versions/{}".format(files_ver[i]))
-        else:
-            for i in range(number, len(files_ver)):
-                local("rm versions/{}".format(files_ver[i]))
+    Args:
+        number (int): The number of archives to keep.
 
-    if files_rel:
-        with cd("/data/web_static/releases/"):
-            if number == 0 or number == 1:
-                for i in range(1, len(files_rel)):
-                    run("rm -r {}".format(files_rel[i]))
-            else:
-                for i in range(number, len(files_rel)):
-                    run("rm -r {}".format(files_rel[i]))
+    If number is 0 or 1, keeps only the most recent archive. If
+    number is 2, keeps the most and second-most recent archives,
+    etc.
+    """
+    number = 1 if int(number) == 0 else int(number)
+
+    archives = sorted(os.listdir("versions"))
+    [archives.pop() for i in range(number)]
+    with lcd("versions"):
+        [local("rm ./{}".format(a)) for a in archives]
+
+    with cd("/data/web_static/releases"):
+        archives = run("ls -tr").split()
+        archives = [a for a in archives if "web_static_" in a]
+        [archives.pop() for i in range(number)]
+        [run("rm -rf ./{}".format(a)) for a in archives]
